@@ -30,7 +30,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git pull origin main
+          git fetch origin main         # ← pullではなくfetchでOK
           git add -A
           git commit -m "Update site $(date +'%Y-%m-%d')" || echo "No changes to commit"
           git push
