@@ -1,9 +1,9 @@
 name: Daily News Website Update
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 * * *'  # 毎日0時（UTC）に自動実行
+  workflow_dispatch:      # 手動実行も可能
 
 jobs:
   build:
@@ -30,7 +30,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git pull origin main           # ← 重要：直前の変更を先に取り込む
-          git add -A                     # ← すべての変更を強制的にステージ
+          git pull origin main
+          git add -A
           git commit -m "Update site $(date +'%Y-%m-%d')" || echo "No changes to commit"
           git push
