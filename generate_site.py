@@ -2,7 +2,7 @@ import datetime
 import requests
 
 today = datetime.date.today().strftime("%Y-%m-%d")
-api_url = "https://newsapi.org/v2/top-headlines?country=jp&apiKey=あなたのAPIキー"
+api_url = "https://newsapi.org/v2/top-headlines?country=jp&apiKey=4469cdebba0e4e2985fee1e0d6839e7e"
 response = requests.get(api_url)
 data = response.json()
 
