@@ -56,3 +56,6 @@ html_content += "</body></html>"
 # 保存
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_content)
+
+print("✅ ニュースHTML生成完了！")
+
