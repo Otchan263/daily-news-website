@@ -2,21 +2,16 @@ import datetime
 import requests
 import os
 
-# 日付を取得
 today = datetime.date.today().strftime("%Y-%m-%d")
-
-# NewsAPIキーを環境変数から取得
 NEWS_API_KEY = os.environ.get("NEWS_API_KEY")
-
-# NewsAPIエンドポイント
 api_url = f"https://newsapi.org/v2/top-headlines?country=jp&apiKey={NEWS_API_KEY}"
-
-# ニュースを取得
 response = requests.get(api_url)
 data = response.json()
-articles = data.get("articles", [])[:5]  # 上位5記事を取得
+articles = data.get("articles", [])[:5]
 
-# HTMLを作成
+# 背景画像の固定
+background_url = "https://source.unsplash.com/1600x900/?nature,landscape"
+
 html_content = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -25,7 +20,7 @@ html_content = f"""<!DOCTYPE html>
     <style>
         body {{
             font-family: sans-serif;
-            background-image: url('https://source.unsplash.com/1600x900/?nature,{today}');
+            background-image: url('{background_url}');
             background-size: cover;
             background-position: center;
             color: white;
@@ -37,33 +32,32 @@ html_content = f"""<!DOCTYPE html>
             margin: 1em 0;
             border-radius: 10px;
         }}
-        a {{
-            color: #ffd;
-        }}
+        a {{ color: #ffd; }}
     </style>
 </head>
 <body>
     <h1>今日のニュース - {today}</h1>
 """
 
-for article in articles:
-    title = article.get('title') or 'タイトルなし'
-    description = article.get('description') or ''
-    url = article.get('url') or '#'
+if not articles:
+    html_content += "<p>現在、取得できるニュースがありません。</p>"
+else:
+    for article in articles:
+        title = article.get('title') or 'タイトルなし'
+        description = article.get('description') or ''
+        url = article.get('url') or '#'
 
-    html_content += f"""
-    <div class="news">
-        <h2>{title}</h2>
-        <p>{description}</p>
-        <a href="{url}" target="_blank">続きを読む</a>
-    </div>
-    """
-
+        html_content += f"""
+        <div class="news">
+            <h2>{title}</h2>
+            <p>{description}</p>
+            <a href="{url}" target="_blank">続きを読む</a>
+        </div>
+        """
 
 html_content += "</body></html>"
 
-# index.html を保存
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_content)
 
-print("✅ index.html を生成しました。")
+print("✅ index.html を正常に生成しました。")
