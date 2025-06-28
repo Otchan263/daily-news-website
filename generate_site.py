@@ -47,13 +47,18 @@ html_content = f"""<!DOCTYPE html>
 """
 
 for article in articles:
+    title = article.get('title') or 'タイトルなし'
+    description = article.get('description') or ''
+    url = article.get('url') or '#'
+
     html_content += f"""
     <div class="news">
-        <h2>{article['title']}</h2>
-        <p>{article.get('description', '')}</p>
-        <a href="{article['url']}" target="_blank">続きを読む</a>
+        <h2>{title}</h2>
+        <p>{description}</p>
+        <a href="{url}" target="_blank">続きを読む</a>
     </div>
     """
+
 
 html_content += "</body></html>"
 
