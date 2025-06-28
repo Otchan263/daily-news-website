@@ -2,20 +2,21 @@ import datetime
 import requests
 import os
 
-# 今日の日付
+# 日付を取得
 today = datetime.date.today().strftime("%Y-%m-%d")
 
-# NewsAPIのキー（取得して置き換えてね）
+# NewsAPIキーを環境変数から取得
 NEWS_API_KEY = os.environ.get("NEWS_API_KEY")
 
-# API URL
+# NewsAPIエンドポイント
 api_url = f"https://newsapi.org/v2/top-headlines?country=jp&apiKey={NEWS_API_KEY}"
+
+# ニュースを取得
 response = requests.get(api_url)
 data = response.json()
+articles = data.get("articles", [])[:5]  # 上位5記事を取得
 
-articles = data.get("articles", [])[:5]  # 上位5件取得
-
-# HTML作成
+# HTMLを作成
 html_content = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -31,15 +32,18 @@ html_content = f"""<!DOCTYPE html>
             padding: 2em;
         }}
         .news {{
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0,0,0,0.6);
             padding: 1em;
-            border-radius: 10px;
             margin: 1em 0;
+            border-radius: 10px;
+        }}
+        a {{
+            color: #ffd;
         }}
     </style>
 </head>
 <body>
-    <h1>今日のニュース（{today}）</h1>
+    <h1>今日のニュース - {today}</h1>
 """
 
 for article in articles:
@@ -47,15 +51,14 @@ for article in articles:
     <div class="news">
         <h2>{article['title']}</h2>
         <p>{article.get('description', '')}</p>
-        <a href="{article['url']}" target="_blank" style="color:#ffd;">続きを読む</a>
+        <a href="{article['url']}" target="_blank">続きを読む</a>
     </div>
     """
 
 html_content += "</body></html>"
 
-# 保存
+# index.html を保存
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_content)
 
-print("✅ ニュースHTML生成完了！")
-
+print("✅ index.html を生成しました。")
